@@ -11,7 +11,7 @@ rm -rf package/lean/luci-theme-argon  #删除源码自带的argon主题，因为
 #
 
 # 修改openwrt登陆地址,把下面的192.168.3.1修改成你想要的就可以了，其他的不要动
-sed -i 's/192.168.1.1/192.168.3.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.126.1/g' package/base-files/files/bin/config_generate
 
 
 #内核版本是会随着源码更新而改变的，在Lienol/openwrt的源码查看最好，以X86机型为例，源码的target/linux/x86文件夹可以看到有几个内核版本，x86文件夹里Makefile就可以查看源码正在使用什么内核
@@ -36,8 +36,14 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping package/t
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/microsocks package/microsocks
 
 
-git clone https://github.com/jerrykuku/node-request.git package/node-request  #京东签到依赖
-git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git package/luci-app-jd-dailybonus  #luci-app-jd-dailybonus[京东签到]
+# Add a feed source增加默认源地址
+sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+
+# 修改主机名字，把OpenWrt-123修改你喜欢的就行（不能纯数字或者使用中文）
+sed -i 's/OpenWrt/Newifi-Y1/g' ./package/base-files/files/bin/config_generate
+
+# 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
+sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings 
 
 
 git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon  #argon-主题
